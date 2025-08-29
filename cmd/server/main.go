@@ -11,12 +11,17 @@ import (
 func main() {
 	config.DBConnect()
 
-	repo := repository.NewTaskRepository()
-	tasks := handlers.NewTaskHandler(repo)
+	taskRepo := repository.NewTaskRepository()
+	tasks := handlers.NewTaskHandler(taskRepo)
+
+	userRepo := repository.NewUserRepository()
+	users := handlers.NewUserHandler(userRepo)
 
 	e := echo.New()
 	e.POST("/tasks", tasks.AddTasks)
 	e.GET("/tasks", tasks.GetTasks)
+
+	e.POST("/users", users.AddUser)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
