@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"time"
 	"todoapp/internal/config"
 	"todoapp/internal/models"
@@ -14,6 +15,7 @@ type userRepoGorm struct{}
 
 type UserRepository interface {
 	CreateUser(user *models.User) error
+	FindExistingUser(identifier, fieldName string) (*models.User, error)
 }
 
 func NewUserRepository() UserRepository {
@@ -30,6 +32,7 @@ func (r *userRepoGorm) CreateUser(user *models.User) error {
 
 	user.ID = xid.New().String()
 	user.Password = string(hashPassword)
+	user.IsActive = true
 
 	// Sets a timeout for the database operation
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -37,4 +40,18 @@ func (r *userRepoGorm) CreateUser(user *models.User) error {
 
 	// Adds a new user to the database
 	return config.DB.WithContext(ctx).Create(user).Error
+}
+
+func (r *userRepoGorm) FindExistingUser(identifier, fieldName string) (*models.User, error) {
+
+	var user models.User
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	err := config.DB.WithContext(ctx).Where(fmt.Sprintf("%s = ?", fieldName), identifier).First(&user).Error
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
 }

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"log"
 	"os"
-	"todoapp/internal/models"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
@@ -44,7 +43,6 @@ func DBConnect() {
 	}
 
 	log.Println("Database connection established successfully")
-	db.AutoMigrate(&models.User{})
 	DB = db
 
 }
