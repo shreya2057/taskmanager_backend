@@ -7,11 +7,11 @@ import (
 	"github.com/go-playground/validator/v10"
 )
 
-func ValidationErrors(e validator.FieldError, user interface{}) (int, map[string]string) {
+func ValidationErrors(e validator.FieldError, obj any) (int, map[string]string) {
 	errorsMap := map[string]string{}
 	var key string
 
-	elem := reflect.TypeOf(user).Elem()
+	elem := reflect.TypeOf(obj).Elem()
 	field, _ := elem.FieldByName(e.Field())
 	jsonTag := field.Tag.Get("json")
 	if jsonTag != "" {
