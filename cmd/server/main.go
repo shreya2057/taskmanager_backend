@@ -28,6 +28,7 @@ func main() {
 	e.GET("/tasks", tasks.GetTasks)
 
 	e.POST("/users", users.AddUser)
+	e.PATCH("/users/:id", users.UpdateUser)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }

@@ -15,12 +15,12 @@ type CreateUser struct {
 }
 
 type UpdateUser struct {
-	ID             string `json:"id" validate:"required"`
-	UserName       string `json:"user_name" validate:"omitempty, required"`
-	Email          string `json:"email" validate:"email, omitempty, required"`
-	Password       string `json:"password" validate:"password, omitempty, required"`
-	FullName       string `json:"full_name" validate:"required, omitempty"`
-	Role           string `json:"role" validate:"oneof=admin user, omitempty"`
+	ID             string `json:"id"`
+	UserName       string `json:"user_name" validate:"omitempty,required"`
+	Email          string `json:"email" validate:"omitempty,email"`
+	Password       string `json:"password" validate:"omitempty,password"`
+	FullName       string `json:"full_name" validate:"omitempty"`
+	Role           string `json:"role" validate:"oneof=admin user,omitempty"`
 	IsActive       bool   `json:"is_active"`
 	ProfilePicture string `json:"profile_picture"`
 	CreatedAt      string `json:"created_at"`
