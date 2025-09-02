@@ -16,6 +16,7 @@ type userRepoGorm struct{}
 type UserRepository interface {
 	CreateUser(user *models.User) error
 	FindExistingUser(identifier, fieldName string) (*models.User, error)
+	UpdateUser(user *models.User) error
 }
 
 func NewUserRepository() UserRepository {
@@ -54,4 +55,13 @@ func (r *userRepoGorm) FindExistingUser(identifier, fieldName string) (*models.U
 		return nil, err
 	}
 	return &user, nil
+}
+
+func (r *userRepoGorm) UpdateUser(user *models.User) error {
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	return config.DB.WithContext(ctx).
+		Model(&models.User{}).Where("id = ?", user.ID).
+		Updates(user).Error
 }

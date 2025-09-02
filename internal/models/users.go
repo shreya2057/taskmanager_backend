@@ -1,12 +1,12 @@
 package models
 
 type User struct {
-	ID             string `gorm:"primaryKey; size:20" json:"id"`
-	UserName       string `gorm:"not null" json:"user_name" validate:"required"`
-	Email          string `gorm:"uniqueIndex" json:"email" validate:"required,email"`
-	Password       string `json:"password" validate:"required,password"`
-	FullName       string `json:"full_name" validate:"required"`
-	Role           string `json:"role" validate:"required,oneof=admin user"`
+	ID             string `gorm:"primaryKey; size:20; uniqueIndex" json:"id"`
+	UserName       string `gorm:"not null; uniqueIndex" json:"user_name"`
+	Email          string `gorm:"uniqueIndex" json:"email"`
+	Password       string `json:"password"`
+	FullName       string `json:"full_name"`
+	Role           string `json:"role"`
 	IsActive       bool   `json:"is_active"`
 	ProfilePicture string `json:"profile_picture"`
 	CreatedAt      string `json:"created_at"`

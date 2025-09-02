@@ -5,17 +5,19 @@ import (
 	"todoapp/internal/models"
 	"todoapp/internal/repository"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 )
 
 // TaskHandler handles HTTP requests for tasks
 type TaskHandler struct {
-	repo repository.TaskRepository
+	repo      repository.TaskRepository
+	validator *validator.Validate
 }
 
 // NewTaskHandler creates a new instance of TaskHandler
-func NewTaskHandler(repo repository.TaskRepository) *TaskHandler {
-	return &TaskHandler{repo: repo}
+func NewTaskHandler(repo repository.TaskRepository, validator *validator.Validate) *TaskHandler {
+	return &TaskHandler{repo: repo, validator: validator}
 }
 
 // AddTasks handles the creation of a new task
