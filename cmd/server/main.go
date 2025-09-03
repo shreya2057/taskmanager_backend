@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 	"todoapp/internal/config"
 	"todoapp/internal/handlers"
 	"todoapp/internal/models"
@@ -13,10 +14,14 @@ import (
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Error loading .env file")
+	if os.Getenv("ENV") != "production" {
+		// load .env only locally
+		err := godotenv.Load()
+		if err != nil {
+			log.Fatalf("Error loading .env file")
+		}
 	}
+
 	config.DBConnect()
 	validate := validator.New()
 
