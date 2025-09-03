@@ -1,16 +1,22 @@
 package main
 
 import (
+	"log"
 	"todoapp/internal/config"
 	"todoapp/internal/handlers"
 	"todoapp/internal/models"
 	"todoapp/internal/repository"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 )
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
 	config.DBConnect()
 	validate := validator.New()
 
@@ -29,6 +35,8 @@ func main() {
 
 	e.POST("/users", users.AddUser)
 	e.PATCH("/users/:id", users.UpdateUser)
+
+	e.POST("/upload-image", handlers.NewUploadHandler(*validate).GetPresignedURL)
 
 	e.Logger.Fatal(e.Start(":8080"))
 }
