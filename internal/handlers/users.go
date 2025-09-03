@@ -53,6 +53,18 @@ func (h *UserHandler) GetAllUsers(c echo.Context) error {
 	return c.JSON(http.StatusOK, utils.Response{Message: "Users fetched successfully", Data: userList})
 }
 
+func (h *UserHandler) GetSingleUser(c echo.Context) error {
+	existingUser, err := h.repo.FindExistingUser(c.Param("id"), "id")
+	if err != nil {
+		return c.JSON(http.StatusNotFound, utils.Response{Message: "User not found", Errors: "No user with the given ID"})
+	}
+
+	if existingUser == nil {
+		return c.JSON(http.StatusNotFound, utils.Response{Message: "User not found", Errors: "No user with the given ID"})
+	}
+	return c.JSON(200, utils.Response{Message: "User detail fetched successfully", Data: existingUser})
+}
+
 func (h *UserHandler) AddUser(c echo.Context) error {
 	var user views.CreateUser
 
