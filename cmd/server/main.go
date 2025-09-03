@@ -35,6 +35,8 @@ func main() {
 
 	e.POST("/users", users.AddUser)
 	e.PATCH("/users/:id", users.UpdateUser)
+	e.GET("/users", users.GetAllUsers)
+	e.DELETE("/users/:id", users.DeleteUser)
 
 	e.POST("/upload-image", handlers.NewUploadHandler(*validate).GetPresignedURL)
 

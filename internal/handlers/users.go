@@ -29,6 +29,30 @@ func NewUserHandler(repo repository.UserRepository, validate *validator.Validate
 	return &UserHandler{repo: repo, validate: *validate}
 }
 
+func (h *UserHandler) GetAllUsers(c echo.Context) error {
+	users, err := h.repo.GetAllUsers()
+
+	userList := make([]views.GetUsers, len(users))
+	for i, user := range users {
+		userList[i] = views.GetUsers{
+			ID:             user.ID,
+			UserName:       user.UserName,
+			Email:          user.Email,
+			FullName:       user.FullName,
+			Role:           user.Role,
+			IsActive:       user.IsActive,
+			ProfilePicture: user.ProfilePicture,
+			CreatedAt:      user.CreatedAt,
+			UpdatedAt:      user.UpdatedAt,
+		}
+	}
+
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, utils.Response{Message: "Could not fetch users", Errors: err.Error()})
+	}
+	return c.JSON(http.StatusOK, utils.Response{Message: "Users fetched successfully", Data: userList})
+}
+
 func (h *UserHandler) AddUser(c echo.Context) error {
 	var user views.CreateUser
 
@@ -56,7 +80,6 @@ func (h *UserHandler) AddUser(c echo.Context) error {
 		ProfilePicture: user.ProfilePicture,
 		CreatedAt:      time.Now().Local().String(),
 		UpdatedAt:      time.Now().Local().String(),
-		DeletedAt:      user.DeletedAt,
 	}
 
 	if err := h.repo.CreateUser(&userModal); err != nil {
@@ -98,7 +121,6 @@ func (h *UserHandler) UpdateUser(c echo.Context) error {
 		IsActive:       user.IsActive,
 		ProfilePicture: user.ProfilePicture,
 		UpdatedAt:      time.Now().Local().String(),
-		DeletedAt:      user.DeletedAt,
 	}
 
 	if err := h.repo.UpdateUser(userModal); err != nil {
@@ -106,4 +128,21 @@ func (h *UserHandler) UpdateUser(c echo.Context) error {
 	}
 	return c.JSON(200, utils.Response{Message: "User updated successfully"})
 
+}
+
+func (h *UserHandler) DeleteUser(c echo.Context) error {
+	existingUser, err := h.repo.FindExistingUser(c.Param("id"), "ID")
+
+	if err != nil {
+		return c.JSON(http.StatusNotFound, utils.Response{Message: "User not found", Errors: "No user with the given ID"})
+	}
+
+	if existingUser == nil {
+		return c.JSON(http.StatusNotFound, utils.Response{Message: "User not found", Errors: "No user with the given ID"})
+	}
+
+	if err := h.repo.DeleteUser(c.Param("id")); err != nil {
+		return c.JSON(http.StatusInternalServerError, utils.Response{Message: "User cannot be deleted", Errors: "Internal server error"})
+	}
+	return c.JSON(200, utils.Response{Message: "User deleted successfully"})
 }

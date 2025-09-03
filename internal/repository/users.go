@@ -14,13 +14,28 @@ import (
 type userRepoGorm struct{}
 
 type UserRepository interface {
+	GetAllUsers() ([]models.User, error)
 	CreateUser(user *models.User) error
 	FindExistingUser(identifier, fieldName string) (*models.User, error)
 	UpdateUser(user *models.User) error
+	DeleteUser(id string) error
 }
 
 func NewUserRepository() UserRepository {
 	return &userRepoGorm{}
+}
+
+func (r *userRepoGorm) GetAllUsers() ([]models.User, error) {
+	var users []models.User
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	err := config.DB.WithContext(ctx).Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+	return users, nil
 }
 
 func (r *userRepoGorm) CreateUser(user *models.User) error {
@@ -64,4 +79,13 @@ func (r *userRepoGorm) UpdateUser(user *models.User) error {
 	return config.DB.WithContext(ctx).
 		Model(&models.User{}).Where("id = ?", user.ID).
 		Updates(user).Error
+}
+
+func (r *userRepoGorm) DeleteUser(id string) error {
+
+	var user models.User
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	return config.DB.WithContext(ctx).Delete(&user, "id = ?", id).Error
 }

@@ -11,7 +11,6 @@ type CreateUser struct {
 	ProfilePicture string `json:"profile_picture"`
 	CreatedAt      string `json:"created_at"`
 	UpdatedAt      string `json:"updated_at"`
-	DeletedAt      string `json:"deleted_at"`
 }
 
 type UpdateUser struct {
@@ -25,5 +24,16 @@ type UpdateUser struct {
 	ProfilePicture string `json:"profile_picture"`
 	CreatedAt      string `json:"created_at"`
 	UpdatedAt      string `json:"updated_at"`
-	DeletedAt      string `json:"deleted_at"`
+}
+
+type GetUsers struct {
+	ID             string `json:"id"`
+	UserName       string `json:"user_name"`
+	Email          string `json:"email"`
+	FullName       string `json:"full_name"`
+	Role           string `json:"role"`
+	IsActive       bool   `json:"is_active"`
+	ProfilePicture string `json:"profile_picture"`
+	CreatedAt      string `json:"created_at"`
+	UpdatedAt      string `json:"updated_at"`
 }
