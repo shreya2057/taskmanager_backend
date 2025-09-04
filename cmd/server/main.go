@@ -15,7 +15,7 @@ import (
 )
 
 func main() {
-	if os.Getenv("ENV") != "production" {
+	if os.Getenv("ENV") != "PROD" {
 		// load .env only locally
 		err := godotenv.Load()
 		if err != nil {
