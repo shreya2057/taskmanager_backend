@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"os"
 	"todoapp/internal/config"
 	"todoapp/internal/handlers"
@@ -10,18 +9,18 @@ import (
 	"todoapp/internal/repository"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/joho/godotenv"
 	"github.com/labstack/echo/v4"
 )
 
 func main() {
-	if os.Getenv("ENV") != "PROD" {
-		// load .env only locally
-		err := godotenv.Load()
-		if err != nil {
-			log.Fatalf("Error loading .env file")
-		}
-	}
+	// if os.Getenv("ENV") == "DEV" {
+	// 	log.Println("test")
+	// 	// load .env only locally
+	// 	err := godotenv.Load()
+	// 	if err != nil {
+	// 		log.Fatalf("Error loading .env file")
+	// 	}
+	// }
 
 	config.DBConnect()
 	validate := validator.New()
