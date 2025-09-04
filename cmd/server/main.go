@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"os"
 	"todoapp/internal/config"
@@ -46,5 +47,10 @@ func main() {
 
 	e.POST("/upload-image", handlers.NewUploadHandler(*validate).GetPresignedURL)
 
-	e.Logger.Fatal(e.Start(":8080"))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	e.Logger.Fatal(e.Start(fmt.Sprintf(":%s", port)))
 }
