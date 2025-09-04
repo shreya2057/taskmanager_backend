@@ -13,12 +13,6 @@ import (
 var DB *gorm.DB
 
 func DBConnect() {
-	// err := godotenv.Load()
-
-	// if err != nil {
-	// 	log.Fatalf("Error loading .env file")
-	// }
-
 	host := os.Getenv("DB_HOST")
 	port := os.Getenv("DB_PORT")
 	user := os.Getenv("DB_USER")
