@@ -36,6 +36,9 @@ func main() {
 	userRepo := repository.NewUserRepository()
 	users := handlers.NewUserHandler(userRepo, validate)
 
+	authRepo := repository.NewAuthRepository()
+	authentication := handlers.NewAuthHandler(authRepo)
+
 	e := echo.New()
 
 	e.POST("/tasks", tasks.AddTasks)
@@ -46,6 +49,8 @@ func main() {
 	e.POST("/users", users.AddUser)
 	e.PATCH("/users/:id", users.UpdateUser)
 	e.DELETE("/users/:id", users.DeleteUser)
+
+	e.POST("/auth/login", authentication.UserLogin)
 
 	e.POST("/upload-image", handlers.NewUploadHandler(*validate).GetPresignedURL)
 
